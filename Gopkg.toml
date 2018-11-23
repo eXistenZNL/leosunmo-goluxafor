@@ -31,4 +31,4 @@
 
 [[constraint]]
   branch = "master"
-  name = "github.com/google/gousb"
+  name = "github.com/karalabe/hid"

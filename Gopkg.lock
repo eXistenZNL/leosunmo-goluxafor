@@ -3,13 +3,15 @@
 
 [[projects]]
   branch = "master"
-  name = "github.com/google/gousb"
+  digest = "1:d1ba92510c0233d4f56d658f68d6faab12cbaf595051e610c6a43c4d85465b37"
+  name = "github.com/karalabe/hid"
   packages = ["."]
-  revision = "c6e780971f197b0c890e80224f4137868f139668"
+  pruneopts = "UT"
+  revision = "2b4488a37358b7283de4f9622553e85ebbe73125"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "6f0a35506a01118ab79a268c9e06f90cf5eafa7ce73a39d78c61def1353f9b98"
+  input-imports = ["github.com/karalabe/hid"]
   solver-name = "gps-cdcl"
   solver-version = 1

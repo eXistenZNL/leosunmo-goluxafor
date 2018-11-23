@@ -1,9 +1,10 @@
 package main
 
 import (
-	"github.com/dln/goluxafor"
 	"math/rand"
 	"time"
+
+	"github.com/leosunmo/goluxafor"
 )
 
 func randomColor() uint8 {
@@ -13,9 +14,9 @@ func randomColor() uint8 {
 func main() {
 	rand.Seed(time.Now().UTC().UnixNano())
 	luxafor := goluxafor.NewLuxafor()
-	// luxafor.Devices[0].Color(goluxafor.LedAll, randomColor(), randomColor(), randomColor(), 0)
-	// luxafor.Devices[0].Strobe(goluxafor.LedAll, randomColor(), randomColor(), randomColor(), 10, 2)
-	// luxafor.Devices[0].Wave(goluxafor.Wave4, randomColor(), randomColor(), randomColor(), 10, 2)
-	luxafor.Devices[0].Pattern(goluxafor.Pattern3, 1)
+	// luxafor.Color(goluxafor.LedAll, randomColor(), randomColor(), randomColor(), 0)
+	// luxafor.Strobe(goluxafor.LedAll, randomColor(), randomColor(), randomColor(), 10, 2)
+	// luxafor.Wave(goluxafor.Wave4, randomColor(), randomColor(), randomColor(), 10, 2)
+	luxafor.Pattern(goluxafor.Pattern3, 1)
 	luxafor.Close()
 }

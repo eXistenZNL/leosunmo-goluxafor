@@ -1,47 +1,55 @@
 package goluxafor
 
 import (
-	"github.com/google/gousb"
 	"log"
+
+	"github.com/karalabe/hid"
 )
 
 type Luxafor struct {
-	ctx *gousb.Context
-
-	Devices []*Device
+	Device *hid.Device
 }
 
 func NewLuxafor() Luxafor {
-	ctx := gousb.NewContext()
 
-	devs, err := ctx.OpenDevices(func(desc *gousb.DeviceDesc) bool {
-		return desc.Vendor == vendorId && desc.Product == productId
-	})
-
-	if err != nil {
-		log.Fatalf("OpenDevices(): %v", err)
-	}
-	if len(devs) == 0 {
-		log.Fatalf("no devices found matching VID %s and PID %s", vendorId, productId)
-	}
-
-	devices := make([]*Device, len(devs))
-	for i, d := range devs {
-		d.SetAutoDetach(true)
-		log.Printf("Opened device: %s", d.Desc)
-		devices[i] = newDevice(d)
-	}
+	device := newDevice()
 
 	return Luxafor{
-		ctx:     ctx,
-		Devices: devices,
+		Device: device,
 	}
 }
 
 func (l *Luxafor) Close() {
-	for _, d := range l.Devices {
-		d.Close()
-	}
+	l.Device.Close()
+}
 
-	l.ctx.Close()
+func (l *Luxafor) writeCommand(command []byte) error {
+	_, err := l.Device.Write(command)
+	if err != nil {
+		log.Printf("Error writing data: %s", err)
+	}
+	return err
+}
+
+func (l *Luxafor) Color(led Led, red uint8, green uint8, blue uint8, fadeTime uint8) error {
+	data := []byte{0x01, byte(led), red, green, blue, fadeTime, 0x0, 0x0}
+	if fadeTime > 0 {
+		data[1] = 0x02
+	}
+	return l.writeCommand(data)
+}
+
+func (l *Luxafor) Strobe(led Led, red uint8, green uint8, blue uint8, speed uint8, repeat uint8) error {
+	data := []byte{0x03, byte(led), red, green, blue, speed, 0x0, repeat}
+	return l.writeCommand(data)
+}
+
+func (l *Luxafor) Wave(wave Wave, red uint8, green uint8, blue uint8, speed uint8, repeat uint8) error {
+	data := []byte{0x04, byte(wave), red, green, blue, 0x0, repeat, speed}
+	return l.writeCommand(data)
+}
+
+func (l *Luxafor) Pattern(pattern Pattern, repeat uint8) error {
+	data := []byte{0x06, byte(pattern), repeat, 0x0, 0x0, 0x0, 0x0, 0x0}
+	return l.writeCommand(data)
 }

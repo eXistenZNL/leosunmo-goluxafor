@@ -1,19 +1,13 @@
 package goluxafor
 
 import (
-	"github.com/google/gousb"
 	"log"
+
+	"github.com/karalabe/hid"
 )
 
-type Device struct {
-	Desc     *gousb.DeviceDesc
-	device   *gousb.Device
-	intf     *gousb.Interface
-	endpoint *gousb.OutEndpoint
-}
-
-const vendorId = gousb.ID(0x4d8)   // Microchip Technology Inc.
-const productId = gousb.ID(0xf372) // LUXAFOR FLAG
+const vendorId = uint16(0x4d8)   // Microchip Technology Inc.
+const productId = uint16(0xf372) // LUXAFOR FLAG
 
 type Led byte
 
@@ -52,57 +46,21 @@ const (
 	Pattern8 Pattern = 0x08
 )
 
-func newDevice(dev *gousb.Device) *Device {
-	intf, _, err := dev.DefaultInterface()
+func newDevice() *hid.Device {
+
+	devInfo := hid.Enumerate(vendorId, productId)
+
+	if len(devInfo) < 1 {
+		log.Fatalf("no devices found matching VID %s and PID %s", vendorId, productId)
+	}
+	if len(devInfo) > 1 {
+		log.Fatalf("More than one device found matching VID %s and PID %s", vendorId, productId)
+	}
+
+	dev, err := devInfo[0].Open()
 	if err != nil {
-		log.Fatalf("%s.DefaultInterface(): %v", dev, err)
+		log.Fatalf("Failed to open HID device, err: %s", err)
 	}
 
-	ep, err := intf.OutEndpoint(1)
-	if err != nil {
-		log.Fatalf("%s.OutEndpoint(1): %v", intf, err)
-	}
-
-	return &Device{
-		Desc:     dev.Desc,
-		device:   dev,
-		intf:     intf,
-		endpoint: ep,
-	}
-}
-
-func (device *Device) Close() {
-	device.intf.Close()
-	device.device.Close()
-}
-
-func (device *Device) writeCommand(command []byte) error {
-	_, err := device.endpoint.Write(command)
-	if err != nil {
-		log.Printf("Error writing data: %s", err)
-	}
-	return err
-}
-
-func (device *Device) Color(led Led, red uint8, green uint8, blue uint8, fadeTime uint8) error {
-	data := []byte{0x01, byte(led), red, green, blue, fadeTime, 0x0, 0x0}
-	if fadeTime > 0 {
-		data[1] = 0x02
-	}
-	return device.writeCommand(data)
-}
-
-func (device *Device) Strobe(led Led, red uint8, green uint8, blue uint8, speed uint8, repeat uint8) error {
-	data := []byte{0x03, byte(led), red, green, blue, speed, 0x0, repeat}
-	return device.writeCommand(data)
-}
-
-func (device *Device) Wave(wave Wave, red uint8, green uint8, blue uint8, speed uint8, repeat uint8) error {
-	data := []byte{0x04, byte(wave), red, green, blue, 0x0, repeat, speed}
-	return device.writeCommand(data)
-}
-
-func (device *Device) Pattern(pattern Pattern, repeat uint8) error {
-	data := []byte{0x06, byte(pattern), repeat, 0x0, 0x0, 0x0, 0x0, 0x0}
-	return device.writeCommand(data)
+	return dev
 }
