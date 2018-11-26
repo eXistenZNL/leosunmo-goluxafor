@@ -46,15 +46,30 @@ const (
 	Pattern8 Pattern = 0x08
 )
 
+type ProdColour byte
+
+const (
+	Enable  ProdColour = 0x45
+	Disable ProdColour = 0x44
+	Red     ProdColour = 0x52
+	Green   ProdColour = 0x47
+	Blue    ProdColour = 0x42
+	Cyan    ProdColour = 0x43
+	Magenta ProdColour = 0x4d
+	Yellow  ProdColour = 0x59
+	White   ProdColour = 0x57
+	Off     ProdColour = 0x4f
+)
+
 func newDevice() *hid.Device {
 
 	devInfo := hid.Enumerate(vendorId, productId)
 
 	if len(devInfo) < 1 {
-		log.Fatalf("no devices found matching VID %s and PID %s", vendorId, productId)
+		log.Fatalf("no devices found matching VID %v and PID %v", vendorId, productId)
 	}
 	if len(devInfo) > 1 {
-		log.Fatalf("More than one device found matching VID %s and PID %s", vendorId, productId)
+		log.Fatalf("More than one device found matching VID %v and PID %v", vendorId, productId)
 	}
 
 	dev, err := devInfo[0].Open()
