@@ -7,26 +7,27 @@ import (
 	"github.com/leosunmo/goluxafor"
 )
 
-func randomColor() uint8 {
+func randomColour() uint8 {
 	return uint8(rand.Intn(0xff))
 }
 
 func main() {
 	rand.Seed(time.Now().UTC().UnixNano())
 	luxafor := goluxafor.NewLuxafor()
-	luxafor.Strobe(goluxafor.LedAll, randomColor(), randomColor(), randomColor(), 10, 2)
+	// luxafor.Strobe(goluxafor.LedAll, randomColour(), randomColour(), randomColour(), 10, 2)
+	luxafor.Wave(goluxafor.Wave1, 255, 0, 255, 1, 10)
 	// luxafor.Pattern(goluxafor.Pattern4, 0)
-	// luxafor.Color(goluxafor.Led1, randomColor(), randomColor(), randomColor(), 0)
-	// luxafor.Color(goluxafor.Led2, randomColor(), randomColor(), randomColor(), 0)
-	// luxafor.Color(goluxafor.Led3, randomColor(), randomColor(), randomColor(), 0)
-	// luxafor.Color(goluxafor.Led4, randomColor(), randomColor(), randomColor(), 0)
-	// luxafor.Color(goluxafor.Led5, randomColor(), randomColor(), randomColor(), 0)
-	// luxafor.Color(goluxafor.Led6, randomColor(), randomColor(), randomColor(), 0)
-	// luxafor.Color(goluxafor.Led1, 0, 200, 0, 0)
-	// luxafor.Color(goluxafor.Led2, 0, 0, 0, 0)
-	// luxafor.Color(goluxafor.Led3, 255, 0, 0, 0)
-	// luxafor.Color(goluxafor.Led4, 0, 200, 0, 0)
-	// luxafor.Color(goluxafor.Led5, 0, 0, 0, 0)
-	// luxafor.Color(goluxafor.Led6, 255, 0, 0, 0)
+	// luxafor.Colour(goluxafor.Led1, randomColour(), randomColour(), randomColour(), 0)
+	// luxafor.Colour(goluxafor.Led2, randomColour(), randomColour(), randomColour(), 0)
+	// luxafor.Colour(goluxafor.Led3, randomColour(), randomColour(), randomColour(), 0)
+	// luxafor.Colour(goluxafor.Led4, randomColour(), randomColour(), randomColour(), 0)
+	// luxafor.Colour(goluxafor.Led5, randomColour(), randomColour(), randomColour(), 0)
+	// luxafor.Colour(goluxafor.Led6, randomColour(), randomColour(), randomColour(), 0)
+	// luxafor.Colour(goluxafor.Led1, 0, 200, 0, 0)
+	// luxafor.Colour(goluxafor.Led2, 0, 0, 0, 0)
+	// luxafor.Colour(goluxafor.Led3, 255, 0, 0, 0)
+	// luxafor.Colour(goluxafor.Led4, 0, 200, 0, 0)
+	// luxafor.Colour(goluxafor.Led5, 0, 0, 0, 0)
+	// luxafor.Colour(goluxafor.Led6, 255, 0, 0, 0)
 	luxafor.Close()
 }
