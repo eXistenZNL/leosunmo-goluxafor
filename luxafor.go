@@ -19,8 +19,11 @@ const (
 	Led6   Led = 0x06
 )
 
+// Wave is one of 5 different wave patterns
 type Wave byte
 
+// The Wave patterns are fairly similar but with slightly different
+// behaviours
 const (
 	Wave1 Wave = 0x01
 	Wave2 Wave = 0x02
@@ -29,8 +32,20 @@ const (
 	Wave5 Wave = 0x05
 )
 
+// Pattern specifies a built-in pattern that affects all LEDs.
 type Pattern byte
 
+/* Patterns come in 8 flavours:
+
+Pattern1 - Traffic lights
+Pattern2 - Colour walk
+Pattern3 - Random pattern
+Pattern4 - Random fading pattern
+Pattern5 - Police pattern
+Pattern6 - Random quick fade pattern
+Pattern7 - Colourful police pattern
+Pattern8 - Quick rainbow pattern
+*/
 const (
 	Pattern1 Pattern = 0x01
 	Pattern2 Pattern = 0x02
