@@ -11,6 +11,16 @@ go get -v -u  github.com/leosunmo/goluxafor/example/rainbow
 rainbow
 ```
 
+Quick 'n dirty CLI
+```
+go get -v -u github.com/leosunmo/goluxafor/example/luxcli
+
+$ luxcli red
+$ luxcli green
+$ luxcli off
+```
+
+
 
 ## Usage
 
