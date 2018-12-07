@@ -3,6 +3,15 @@
 
 A simple library to control the [Luxafor Flag](https://luxafor.com/luxafor-flag/).
 
+## Examples
+
+For rainbow radness
+```
+go get -v -u  github.com/leosunmo/goluxafor/example/rainbow
+rainbow
+```
+
+
 ## Usage
 
 ```go
