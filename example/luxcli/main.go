@@ -11,18 +11,26 @@ import (
 )
 
 var (
-	pattern = flag.Int("p", 0, "pattern to activate (1-8)")
 
-	rgb     = flag.String("rgb", "", "`RGB` value to use (in web #C0C0C0 format)")
-	fade    = flag.Int("fade", 0, "`fade` value (0-255)")
-	ledmask = flag.Int("leds", int(goluxafor.LedAll), "`led mask value` to use to apply the colour (0-255)")
+	// major modes
+	pattern = flag.Int("p", 0, "pattern to activate (1-8)")
+	rgb     = flag.String("rgb", "", "`RGB` value to use (in hex #C0C0C0 format)")
+	strobe  = flag.Bool("strobe", false, "strobe mode")
+	wave    = flag.Int("wave", 0, "wave pattern (`0-5`), 0 - off")
+
+	ledmask = flag.Int("leds", int(goluxafor.LedAll), "led mask value to use to apply the colour. Valid (`1-6,65,66,255`)")
+	speed   = flag.Int("speed", 0, "speed for wave and strobe (`0-255`)")
 
 	off = flag.Bool("off", false, "switch off")
 )
 
 var (
-	validByte    = intValidator(0, 255)
+	// value specific
 	validPattern = intValidator(0, 8)
+	validWave    = intValidator(0, 5)
+
+	// generic
+	validByte = intValidator(0, 255)
 )
 
 func main() {
@@ -44,15 +52,25 @@ func main() {
 	case *pattern > 0:
 		*pattern = validPattern(*pattern)
 		err = luxafor.Pattern(goluxafor.Pattern(*pattern), 0)
-	case *rgb != "":
+	case *rgb != "" || *wave > 0 || *strobe:
+		*ledmask = validByte(*ledmask)
+		*speed = validByte(*speed)
+		*wave = validWave(*wave)
+
 		var c color.RGBA
 		c, err = ParseHexColor(*rgb)
 		if err != nil {
 			break
 		}
-		*ledmask = validByte(*ledmask)
-		*fade = validByte(*fade)
-		err = luxafor.Colour(goluxafor.Led(*ledmask), c.R, c.G, c.B, byte(*fade))
+		switch {
+		case *rgb != "":
+			err = luxafor.Colour(goluxafor.Led(*ledmask), c.R, c.G, c.B, 0)
+		case *wave > 0:
+			err = luxafor.Wave(goluxafor.Wave(*wave), c.R, c.G, c.B, byte(*speed), 0)
+		case *strobe:
+			err = luxafor.Strobe(goluxafor.Led(*ledmask), c.R, c.G, c.B, byte(*speed), 0)
+		}
+
 	}
 	if err != nil {
 		log.Fatal(err)
