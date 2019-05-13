@@ -45,7 +45,8 @@ func main() {
 		*pattern = validPattern(*pattern)
 		err = luxafor.Pattern(goluxafor.Pattern(*pattern), 0)
 	case *rgb != "":
-		c, err := ParseHexColor(*rgb)
+		var c color.RGBA
+		c, err = ParseHexColor(*rgb)
 		if err != nil {
 			break
 		}
@@ -72,7 +73,7 @@ func ParseHexColor(s string) (c color.RGBA, err error) {
 		c.G *= 17
 		c.B *= 17
 	default:
-		err = fmt.Errorf("invalid length, must be 7 or 4")
+		err = fmt.Errorf("invalid color, must be in #000 or #000000 form")
 	}
 	return
 }
