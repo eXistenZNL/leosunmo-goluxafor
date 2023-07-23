@@ -106,11 +106,11 @@ func (l *Luxafor) writeCommand(command []byte) error {
 	return err
 }
 
-// Colour sets a RGB colour for specified LED(s)
+// Colour sets an RGB colour for specified LED(s)
 func (l *Luxafor) Colour(led Led, red uint8, green uint8, blue uint8, fadeTime uint8) error {
 	data := []byte{0x01, byte(led), red, green, blue, fadeTime, 0x0, 0x0}
 	if fadeTime > 0 {
-		data[1] = 0x02
+		data[0] = 0x02
 	}
 	return l.writeCommand(data)
 }
